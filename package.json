@@ -1,0 +1,23 @@
+{
+  "name": "socket-io-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc --build",
+    "fix": "gts fix",
+    "prepare": "pnpm.cmd run compile",
+    "pretest": "pnpm.cmd run compile",
+    "posttest": "pnpm.cmd run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "gts": "^5.3.1",
+    "typescript": "^5.4.3",
+    "@types/node": "20.12.7"
+  }
+}
