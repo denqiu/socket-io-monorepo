@@ -4,12 +4,12 @@ export const BUILT_IN_IO_EVENTS = {
     connect_io_to_socket: 'connection'
 };
 export const BUILT_IN_SOCKET_EVENTS = {
-    connect_socket_to_io: 'connect'
+    connect_socket_to_io: 'connect',
+    disconnect: 'disconnect'
 };
 export const ROOM_EVENTS = {
-    // associate each room with a route
-    ENTER_ROUTE: 'ENTER_ROUTE',
-    LEAVE_ROUTE: 'LEAVE_ROUTE'
+    ENTER_ROOM: 'ENTER_ROOM',
+    LEAVE_ROOM: 'LEAVE_ROOM'
 };
 export const MESSAGING_EVENTS = {
     SUCCESS: 'SUCCESS',

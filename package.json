@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "reinstall": "rm pnpm-lock.yaml && pnpm install",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc --build",
