@@ -1,16 +1,17 @@
 {
-  "name": "backend",
+  "name": "@dqiu/backend-server",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon --env-file=.env server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@util/event": "workspace:*",
+    "@dqiu/util-event": "workspace:*",
+    "@dqiu/util-server": "workspace:*",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "socket.io": "^4.7.5"

@@ -23,5 +23,6 @@
   "files": [],
   "references": [
     { "path": "./packages/util-event/tsconfig-util.json" },
+    { "path": "./packages/util-server/tsconfig-util.json" },
   ]
 }

@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "reinstall": "rm pnpm-lock.yaml && pnpm install",
+    "reinstall": "bash -c 'rm pnpm-lock.yaml; rm -rf node_modules/' && pnpm install",
+    "config:env": "bash -c 'ln -s \"$PWD/.env\" \"$PWD/src/backend/.env\"; ln -s \"$PWD/.env\" \"$PWD/src/frontend/client/.env\"'",
+    "backend:server": "pnpm --filter @dqiu/backend-server start",
+    "frontend:client": "pnpm --filter @dqiu/frontend-client start",
+    "start:client": "concurrently \"pnpm backend:server\" \"pnpm frontend:client\"",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc --build",
@@ -17,8 +21,8 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/node": "20.12.7",
     "gts": "^5.3.1",
-    "typescript": "^5.4.3",
-    "@types/node": "20.12.7"
+    "typescript": "^5.4.3"
   }
 }
