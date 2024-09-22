@@ -1,2 +1,5 @@
 packages:
   - "packages/*"
+  - "src/backend"
+  - "src/frontend/client"
+  - "src/frontend/frameworks/*"

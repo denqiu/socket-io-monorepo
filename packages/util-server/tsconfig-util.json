@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.json",
+    // package configuration at package level
+    "compilerOptions": {
+        "outDir": "./build",
+        "rootDir": "./src",
+        "lib": ["es2022"]
+    },
+    "include": [
+     "src/*.ts",
+    ]
+}

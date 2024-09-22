@@ -1,5 +1,5 @@
 {
-  "name": "@dqiu/util-event",
+  "name": "@dqiu/util-server",
   "version": "1.0.0",
   "description": "",
   "main": "./build/index.js",
@@ -7,12 +7,10 @@
   "files": [
     "./build"
   ],
-  "scripts": {},
+  "scripts": {
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "socket.io": "^4.7.5"
-  }
+  "type": "module"
 }
