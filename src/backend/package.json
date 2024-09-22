@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "nodemon --env-file=.env server.js"
+    "test": "nodemon --env-file=.env test-server.js"
   },
   "keywords": [],
   "author": "",

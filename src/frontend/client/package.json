@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib.js",
   "scripts": {
-    "start": "nodemon --env-file=.env index.js"
+    "test": "nodemon --env-file=.env test.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@dqiu/util-event": "workspace:*",
     "@dqiu/util-server": "workspace:*",
+    "@dqiu/backend-server": "workspace:*",
     "socket.io-client": "^4.7.5"
   }
 }

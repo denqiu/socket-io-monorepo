@@ -7,10 +7,12 @@
   "files": [
     "./build"
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "socket.io": "^4.7.5"
+  }
 }
