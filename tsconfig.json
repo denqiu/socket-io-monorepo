@@ -8,6 +8,7 @@
     "module": "es2022",
     "moduleResolution": "node",
     "allowJs": true,
+    "checkJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
@@ -22,7 +23,7 @@
   },
   "files": [],
   "references": [
-    { "path": "./packages/util-event/tsconfig-util.json" },
-    { "path": "./packages/util-server/tsconfig-util.json" },
+    { "path": "./packages/util-event/tsconfig-package.json" },
+    { "path": "./packages/util-server/tsconfig-package.json" },
   ]
 }

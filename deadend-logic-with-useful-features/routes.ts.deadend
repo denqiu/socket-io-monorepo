@@ -1,0 +1,45 @@
+// origin: src/backend/routes.ts
+
+type TestRoutes = ['/route', '/route-2', '/route-error'];
+
+type Routes = [''];
+
+// Deriving Type Definitions: https://stackoverflow.com/a/55132203
+/**
+ * Expected length of defined routes.
+ */
+type Length<Rs extends readonly string[]> = Rs['length'];
+/**
+ * Expand index positions of defined routes into union.
+ */
+type Expand<Rs extends readonly string[]> = Rs[number];
+
+// derivation doesn't work for this use case. Checking length is too finicky. Use builder logic instead.
+
+/**
+ * @example
+ * // For expectedLength
+ * type ItemList = ['a', 'b', 'c', 'd'];
+ * type Count<T extends readonly string[]> = T['length'];
+ * // Automatically calculates item count and appears in autocomplete. Programmer can simply copy the correct count into the value side of the equation.
+ * const compilerErrorCount: Count<ItemList> = 2;
+ * const expectedItemCount: Count<ItemList> = 4;
+ */
+function checkRoutes<Rs extends TestRoutes | Routes>(expectedLength: Length<Rs>, routes: Expand<Rs>[]) {
+    const uniqueRoutes = new Set(routes);
+    if (uniqueRoutes.size > expectedLength) {
+        // throw error to merge multiple objects with the same route for consistency. Having same routes in multiple places increases confusion.
+        throw new Error("");
+    }
+    if (uniqueRoutes.size < expectedLength) {
+        // warn routes not used in definition
+        console.warn("");
+    }
+}
+
+export {
+    type TestRoutes,
+    type Routes,
+    type Expand,
+    checkRoutes
+};

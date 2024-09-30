@@ -1,11 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Client from "../../../client/index.js";
 
 function App() {
   const [count, setCount] = useState(0)
+  useEffect(() => {
+    const client = new Client();
 
+    client.loadOneAtATimeEvents((response) => console.log(response), (error) => console.error(`Error: ${error}`));
+    client.loadParallelEvents((response) => console.log(response), (error) => console.error(`Error: ${error}`));
+  });
   return (
     <>
       <div>

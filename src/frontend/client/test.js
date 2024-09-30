@@ -1,9 +1,10 @@
-import Client from "./lib.js";
+import Client from "./index.js";
+import { TestEvents } from "../../backend/index.js";
 
 const client = new Client();
-client.testConnection();
+client.testConnectionToServer();
 
 const handleSuccess = (response) => console.log(response);
-const handleError = (error) => console.error(`Error: ${error}`);
+const handleError = (error) => console.error(`[Error] ${error}`);
 client.loadOneAtATimeEvents(handleSuccess, handleError);
-client.loadParallelEvents(handleSuccess, handleError);
+client.loadParallelEvents(handleSuccess, handleError, TestEvents('server').getRoutes().flatMap(r => r.eventBuilder.getEventIds()));

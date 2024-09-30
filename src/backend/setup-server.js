@@ -4,9 +4,16 @@ import http from "http";
 import { Server } from "socket.io";
 import { BUILT_IN_IO_EVENTS, BUILT_IN_SOCKET_EVENTS, ROOM_EVENTS, MESSAGING_EVENTS } from "@dqiu/util-event";
 import ServerUtil from "@dqiu/util-server";
-import TestParallelEvents from "./test-events/test-parallel-events.js";
+import { TestEvents } from "./index.js";
 
-const roomType = (type) => type === process.env.ONE_AT_A_TIME_EVENTS ? 1 : 2;
+/**
+ * @typedef {import("@dqiu/util-event").EventType} EventType
+ */
+
+/**
+ * @param {EventType} type 
+ */
+const roomType = (type) => type === 'ONE_AT_A_TIME' ? 1 : 2;
 
 class SetupServer {
 	constructor() {
@@ -44,23 +51,41 @@ class SetupServer {
 				socket.leave(`${room}-${roomType(type)}`);
 			});
 			if (process.env.ONE_AT_A_TIME_EVENTS) {
-				socket.on(process.env.ONE_AT_A_TIME_EVENTS, (data, callback) => {
-					if (socket.rooms.has(`${data.room}-${roomType(process.env.ONE_AT_A_TIME_EVENTS)}`)) {
-						callback(data);
-						this.io.emit(MESSAGING_EVENTS.SUCCESS, `Server: ${data.message}`);
+				// Although callback is created in the client, there's no harm in setting up callback in events folder, as demonstrated for parallel events.
+				// This is a demonstration of the options we have at our disposal to setup event logic.
+				/**
+				 * @type {EventType}
+				 */
+				const eventType = 'ONE_AT_A_TIME';
+				socket.on(eventType, (data, callback) => {
+					if (socket.rooms.has(`${data.room}-${roomType(eventType)}`)) {
+						try {
+							if (data.serverTest) {
+								data.showIoError ? callback(data, this.io) : callback(data);
+							} else {
+								callback(data, this.io);
+							}
+							this.io.emit(MESSAGING_EVENTS.SUCCESS, `Server: ${data.message}`);
+						} catch (error) {
+							this.io.emit(MESSAGING_EVENTS.ERROR, `Server: ${error}`);
+						}
 					} else {
 						this.io.emit(MESSAGING_EVENTS.ERROR, `Room '${data.room}' not found.`);
 					}
 				});
 			}
 			if (process.env.PARALLEL_EVENTS) {
-				for (const event of TestParallelEvents.events) {
+				for (const event of TestEvents('server').getRoutes().flatMap(r => r.eventBuilder.getEvents())) {
 					socket.on(event.id, (data) => {
-						if (socket.rooms.has(`${data.room}-${roomType(process.env.PARALLEL_EVENTS)}`)) {
-							event.callback(data, event.id, this.io);
-                            this.io.emit(`${event.id}_${MESSAGING_EVENTS.SUCCESS}`, `Server: ${data.message}`);
+						if (socket.rooms.has(`${data.room}-${roomType('PARALLEL')}`)) {
+							try {
+								event.callback(data, event.id, this.io);
+                            	this.io.emit(`${event.id}_${MESSAGING_EVENTS.SUCCESS}`, `${event.id} - Server: ${data.message}`);
+							} catch (error) {
+								this.io.emit(`${event.id}_${MESSAGING_EVENTS.ERROR}`, `${event.id} - ${error}`);
+							}
 						} else {
-							this.io.emit(`${event.id}_${MESSAGING_EVENTS.ERROR}`, `Room '${data.room}' not found.`);
+							this.io.emit(`${event.id}_${MESSAGING_EVENTS.ERROR}`, `${event.id} - Room '${data.room}' not found.`);
 						}
                     });
 				}
@@ -70,3 +95,4 @@ class SetupServer {
 }
 
 export default SetupServer;
+export { roomType };
