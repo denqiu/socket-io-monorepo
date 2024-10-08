@@ -1,0 +1,19 @@
+{
+  "name": "@dqiu/util-route",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "./build"
+  ],
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@dqiu/util-event": "workspace:*"
+  }
+}

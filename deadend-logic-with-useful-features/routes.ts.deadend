@@ -4,7 +4,7 @@ type TestRoutes = ['/route', '/route-2', '/route-error'];
 
 type Routes = [''];
 
-// Deriving Type Definitions: https://stackoverflow.com/a/55132203
+// Deriving Types: https://stackoverflow.com/a/55132203
 /**
  * Expected length of defined routes.
  */

@@ -3,8 +3,7 @@
     // package configuration at package level
     "compilerOptions": {
         "outDir": "./build",
-        "rootDir": "./src",
-        "lib": ["es2022"]
+        "rootDir": "./src"
     },
     "include": [
      "src/*.ts",

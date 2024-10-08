@@ -1,0 +1,17 @@
+{
+  "name": "@dqiu/util-type",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "./build"
+  ],
+  "scripts": {
+    "help:type": "node -e \"import('./help.js').then(module => global.Help = module.default);\" -i"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}

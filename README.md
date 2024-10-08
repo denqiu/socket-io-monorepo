@@ -8,3 +8,5 @@
     <li>How to run multiple scripts in parallel: <code>pnpm install concurrently --global</code></li>
     <li>There's an issue where nodemon fails to reload after making multiple changes when running multiple scripts in parallel, via <code>npm-run-all --parallel</code> or <code>concurrently --raw</code>. Simply using <code>concurrently</code> without <code>--raw</code> argument resolves the issue.</li>
 </ul>
+
+Figure out how to customize gts clean on packages folder 
