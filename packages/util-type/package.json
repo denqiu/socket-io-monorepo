@@ -1,5 +1,5 @@
 {
-  "name": "@dqiu/util-server",
+  "name": "@dqiu/util-type",
   "version": "1.0.0",
   "description": "",
   "main": "./build/index.js",
@@ -8,12 +8,10 @@
     "./build"
   ],
   "scripts": {
+    "help:type": "node -e \"import('./help.js').then(module => global.Help = module.default);\" -i"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@dqiu/util-runtime": "workspace:*"
-  }
+  "type": "module"
 }

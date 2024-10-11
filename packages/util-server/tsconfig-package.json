@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.json",
+    // package configuration at package level
+    "compilerOptions": {
+        "outDir": "./build",
+        "rootDir": "./src"
+    },
+    "include": [
+     "src/*.ts",
+    ]
+}

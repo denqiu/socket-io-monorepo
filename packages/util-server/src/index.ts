@@ -1,6 +1,8 @@
+import RuntimeUtil from "@dqiu/util-runtime";
+
 const ServerUtil = {
-    backendPort: process.env.PORT || 4000,
-    NODE_ENV: process.env.NODE_ENV || 'development',
+    backendPort: RuntimeUtil.nodeProcess?.env?.PORT || 4000,
+    NODE_ENV: RuntimeUtil.nodeProcess?.env?.NODE_ENV || 'development',
 };
 
 export default ServerUtil;

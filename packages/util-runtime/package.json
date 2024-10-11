@@ -1,5 +1,5 @@
 {
-  "name": "@dqiu/util-server",
+  "name": "@dqiu/util-runtime",
   "version": "1.0.0",
   "description": "",
   "main": "./build/index.js",
@@ -12,8 +12,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@dqiu/util-runtime": "workspace:*"
-  }
+  "type": "module"
 }
