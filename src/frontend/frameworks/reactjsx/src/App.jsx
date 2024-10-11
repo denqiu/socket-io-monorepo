@@ -1,6 +1,7 @@
+import React from 'react';
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
 import { BUILT_IN_SOCKET_EVENTS, MESSAGING_EVENTS } from "@dqiu/util-event";
 import Client from "../../../client/index.js";
@@ -21,23 +22,23 @@ function App() {
    */
   const [routes, setRoutes] = useState([]);
   const [isConnected, setConnected] = useState(false);
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
 
   // const [successMessage, setSuccessMessage] = useState("");
   // const [warningMessage, setWarningMessage] = useState("")
   // const [errorMessage, setErrorMessage] = useState("");
 
-  const eventIds = routes.flatMap(r => r.eventBuilder.eventIds);
+  const eventIds = routes.flatMap(r => r.eventBuilder.getEventIds());
   const client = new Client(eventIds, {
-    [MESSAGING_EVENTS.SUCCESS]: (response) => setSuccessMessage(`[Success] ${response}`),
-    [MESSAGING_EVENTS.WARNING]: (warning) => setWarningMessage(`[Warning] ${warning}`),
-    [MESSAGING_EVENTS.ERROR]: (error) => setError(`[Error] ${error}`)
+    [MESSAGING_EVENTS.SUCCESS]: (response) => console.log(`[Success] ${response}`),
+    [MESSAGING_EVENTS.WARNING]: (warning) => console.warn(`[Warning] ${warning}`),
+    [MESSAGING_EVENTS.ERROR]: (error) => console.error(`[Error] ${error}`)
   });
 
   useEffect(() => {
     function connectSocketToIo() {
       setConnected(true);
-      setRoutes(TestEvents('framework').routes);
+      setRoutes(TestEvents('framework').getRoutes());
       // load events/routes here
       // if not connected and events.size === 0 show loading screen. If connected, load routes/events
       // if disconnected and events.size !== 0 we should still be able to mantain frontend. Display warning saying server is not connected and cannot receive updates from server.
@@ -56,14 +57,19 @@ function App() {
       client.socket.off(BUILT_IN_SOCKET_EVENTS.disconnect, disconnect);
       client.removeEventResponses();
     };
-  }, []);
+  });
   return (
     <>
       {routes.length === 0 ?
           <h1>Loading...</h1>
         :
         // load routes here
-          <h1>Total Routes: {routes.length}</h1>
+          <React.Fragment>
+            {!isConnected &&
+              <h1>Server disconnected.</h1>
+            }
+            <h1>Routes: {routes.map(r => r.route).join(", ")}</h1>
+          </React.Fragment>
       }
     </>
   );

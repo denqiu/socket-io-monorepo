@@ -1,0 +1,12 @@
+// Origin: packages/util-runtime/src/index.ts
+
+/**
+ * 1. Not in use. Originally created to ensure undefined variables don't crash app, like "process" in node and "window" in browsers, specifically when working with access to environment variables (process.env for node, import.meta.env for vite).
+ * 2. NOW BACK IN USE. No need to handle environment variables. Simply handle undefined variables that break the app.
+ */
+const RuntimeUtil = {
+    nodeProcess: typeof process !== 'undefined' && process,
+    browserWindow: typeof window !== 'undefined' && window
+};
+
+export default RuntimeUtil;

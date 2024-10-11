@@ -1,9 +1,8 @@
 import { routeBuilder } from "@dqiu/util-route";
-import TestEvents, { sampleTest } from "./events/test-events.js";
+import TestEvents from "./events/test-events.js";
 
-routeBuilder.setupEnvWarning();
+routeBuilder.warnEventTypes();
 export {
 	TestEvents,
-	sampleTest,
 	routeBuilder,
 };

@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import { EventResponder, BUILT_IN_IO_EVENTS, BUILT_IN_SOCKET_EVENTS, ROOM_EVENTS, MESSAGING_EVENTS } from "@dqiu/util-event";
+import { EventResponder, EventHelper, BUILT_IN_IO_EVENTS, BUILT_IN_SOCKET_EVENTS, ROOM_EVENTS, MESSAGING_EVENTS } from "@dqiu/util-event";
 import ServerUtil from "@dqiu/util-server";
-import { TestEvents, sampleTest } from "./index.js";
+import { TestEvents } from "./index.js";
 
 /**
  * @typedef {import("@dqiu/util-event").EventType} EventType
@@ -40,7 +40,7 @@ class SetupServer {
 		});
 
 		const frontendUrls = {
-			development: ["http://localhost:5173", "http://localhost:4173"],
+			development: ["http://localhost:5173", "http://localhost:4173"], // vite dev and preview ports
 			production: ["https://your-production-url.com"] // replace with your production domain
 		};
 		this.io = new Server(server, {
@@ -54,9 +54,10 @@ class SetupServer {
 	testConnection() {
 		this.io.on(BUILT_IN_IO_EVENTS.connect_io_to_socket, (socket) => {
 			initConnection(socket);
-			if (process.env.ONE_AT_A_TIME_EVENTS) {
-				// Although callback is created in the client, there's no harm in setting up callback in events folder, as demonstrated for parallel events.
-				// This is a demonstration of the options we have at our disposal to setup event logic.
+			if (EventHelper.eventTypes.ONE_AT_A_TIME.enabled) {
+				// This is a demonstration of passing information back and forth between server and client.
+				// There's no problem setting up callback client-side but there are limitations. We cannot pass io to callback.
+				// Callback is setup server-side for parallel events. We can pass io to callback.
 				/**
 				 * @type {EventType}
 				 */
@@ -79,8 +80,8 @@ class SetupServer {
 					}
 				});
 			}
-			if (process.env.PARALLEL_EVENTS) {
-				const testParallelEvents = TestEvents('server').routes.flatMap(r => r.eventBuilder.events);
+			if (EventHelper.eventTypes.PARALLEL.enabled) {
+				const testParallelEvents = TestEvents('server').getRoutes().flatMap(r => r.eventBuilder.getEvents());
 				for (const event of testParallelEvents) {
 					const eventResponder = new EventResponder(event.id, this.io);
 					socket.on(event.id, (data) => {
@@ -89,16 +90,13 @@ class SetupServer {
 								event.callback(data, eventResponder);
 								eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `${event.id} - Server: ${data.message}` });
 							} catch (error) {
-								eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - ${error}` });
+								eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - ${error.message}` });
 							}
-							event.callbackTest && event.callbackTest(data, this.io, event.id);
 						} else {
 							eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - Room '${data.room}' not found.` });
 						}
                     });
 				}
-				const sampleResponder = new EventResponder("SAMPLE_EVENT", this.io);
-				socket.on("SAMPLE_EVENT", (data) => sampleTest(data, this.io, sampleResponder));
 			}
 		});
 	}
@@ -106,17 +104,18 @@ class SetupServer {
 	testFrameworkConnection() {
 		this.io.on(BUILT_IN_IO_EVENTS.connect_io_to_socket, (socket) => {
 			initConnection(socket);
-			const events = TestEvents('framework').routes.flatMap(r => r.eventBuilder.events);
+			const events = TestEvents('framework').getRoutes().flatMap(r => r.eventBuilder.getEvents());
 			for (const event of events) {
+				// No need for ONE_AT_A_TIME or PARALLEL conditional check here. It's already handled in event builder.
+				// Event builder will not add events with their type not enabled.
 				const eventResponder = new EventResponder(event.id, this.io);
-				// figure out event type from event
 				socket.on(event.id, (data) => {
-					if (socket.rooms.has(`${data.room}-${roomType('PARALLEL')}`)) {
+					if (socket.rooms.has(`${data.room}-${roomType(event.type)}`)) {
 						try {
 							event.callback(data, eventResponder);
 							eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `${event.id} - Server: ${data.message}` });
 						} catch (error) {
-							eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - ${error}` });
+							eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - ${error.message}` });
 						}
 					} else {
 						eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.ERROR, message: `${event.id} - Room '${data.room}' not found.` });

@@ -1,4 +1,5 @@
-// origin: src/backend/routes.ts
+// Origin: src/backend/routes.ts
+// Derivation doesn't work for this use case. Checking length is too finicky. Use builder logic instead. See util-route.
 
 type TestRoutes = ['/route', '/route-2', '/route-error'];
 
@@ -13,8 +14,6 @@ type Length<Rs extends readonly string[]> = Rs['length'];
  * Expand index positions of defined routes into union.
  */
 type Expand<Rs extends readonly string[]> = Rs[number];
-
-// derivation doesn't work for this use case. Checking length is too finicky. Use builder logic instead.
 
 /**
  * @example

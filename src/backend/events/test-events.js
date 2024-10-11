@@ -1,4 +1,4 @@
-import { routeTestsBuilder } from "@dqiu/util-route";
+import { testRouteBuilder } from "@dqiu/util-route";
 import { EventBuilder, EventResponder, MESSAGING_EVENTS } from "@dqiu/util-event";
 import { DateTime } from "luxon";
 
@@ -45,7 +45,7 @@ function TestEvents(testType) {
 				responder.emitToClient({ responseType: MESSAGING_EVENTS.WARNING, message: "First Route: First warning" });
 			}
 		});
-		route2Events.add('ONE_AT_A_TIME', {
+		routeEvents.add('ONE_AT_A_TIME', {
 			label: 'Wait 15 seconds',
 			callback: (data, responder) => createCountdownTimer(15, 'seconds', responder)
 		});
@@ -57,7 +57,7 @@ function TestEvents(testType) {
 	routeEvents.add('PARALLEL', {
 		id: "PARALLEL_1",
 		label: "Parallel Event 1",
-		callback: (data, responder) => console.log(`${responder.eventId} - Event: ${data.message}`)
+		callback: (data, responder) => console.log(`${responder.getEventId()} - Event: ${data.message}`)
 	});
 
 	const route2Events = new EventBuilder();
@@ -85,13 +85,8 @@ function TestEvents(testType) {
 		id: "PARALLEL_2",
 		label: "Parallel Event route 2",
 		callback: (data, responder) => {
-			console.log(`${responder.eventId} - Event: ${data.message}`);
-			responder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `${responder.eventId} - Emitting IO: io ${data.message}` });
-		},
-		callbackTest: (data, io, eventId) => {
-			console.log("Emitting io");
-			io.emit("ONE_AT_A_TIME_RESPONSE", { responseType: MESSAGING_EVENTS.SUCCESS, message: `${eventId} Emitting IO: io ${data.message}`});
-			io.emit(`${eventId}_RESPONSE`, { responseType: MESSAGING_EVENTS.SUCCESS, message: `${eventId} Emitting IO: io ${data.message}` });
+			console.log(`${responder.getEventId()} - Event: ${data.message}`);
+			responder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `${responder.getEventId()} - Emitting IO: io ${data.message}` });
 		}
 	});
 
@@ -119,22 +114,15 @@ function TestEvents(testType) {
 		id: "PARALLEL_ERROR",
 		label: "Parallel Event Error",
 		callback: (data, responder) => {
-			// throw new Error(`${responder.eventId} - Threw parallel error`);
+			throw new Error(`Threw parallel error`);
 		}
 	});
-	routeTestsBuilder.add(routeEvents, ['route']);
-	routeTestsBuilder.add(route2Events, ['route-2']);
-	routeTestsBuilder.add(routeErrorEvents, ['route-error']);
-	routeTestsBuilder.setupEnvWarning();
-	return routeTestsBuilder;
-}
 
-function sampleTest(data, io, sampleResponder) {
-	io.emit("SAMPLE_EVENT_RESPONSE", { responseType: MESSAGING_EVENTS.WARNING, message: `Response: ${data.message}`});
-	sampleResponder.emitToClient({ responseType: MESSAGING_EVENTS.WARNING, message: `Event Responder: ${data.message}` });
+	testRouteBuilder.addIfAbsent(routeEvents, ['route']);
+	testRouteBuilder.addIfAbsent(route2Events, ['route-2']);
+	testRouteBuilder.addIfAbsent(routeErrorEvents, ['route-error']);
+	testRouteBuilder.warnEventTypes();
+	return testRouteBuilder;
 }
 
 export default TestEvents;
-export { 
-	sampleTest
-};

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "nodemon --env-file=.env test.js"
+    "test": "nodemon test.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,6 @@
   "dependencies": {
     "@dqiu/util-event": "workspace:*",
     "@dqiu/util-server": "workspace:*",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.8.0"
   }
 }

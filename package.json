@@ -4,14 +4,12 @@
   "description": "",
   "scripts": {
     "reinstall": "bash -c 'rm pnpm-lock.yaml; rm -rf node_modules/@dqiu' && pnpm install",
-    "config:env": "bash -c 'ln -f \"$PWD/.env\" \"$PWD/src/backend/.env\"; ln -f \"$PWD/.env\" \"$PWD/src/frontend/client/.env\"'",
     "help:type": "pnpm --filter @dqiu/util-type help:type",
-    "backend:server": "pnpm --filter @dqiu/backend-server test",
-    "frontend:client": "pnpm --filter @dqiu/frontend-client test",
-    "test:client": "pnpm lint && concurrently \"pnpm backend:server\" \"pnpm frontend:client\"",
-    "prelint": "bash -c 'if grep -q \"//.*\\\"include\\\":\" tsconfig.json; then sed -i \"s/\\/\\/.*\\\"include\\\":/\\\"include\\\":/\" tsconfig.json; fi'",
+    "test:client": "pnpm lint && concurrently \"pnpm --filter @dqiu/backend-server test\" \"pnpm --filter @dqiu/frontend-client test\"",
+    "backend:framework": "pnpm --filter @dqiu/backend-server framework",
+    "prelint": "node ./scripts/package.json/lint-helper.js prelint",
     "lint": "bash -c \"pnpm prelint && pnpm gts lint; exitError=$?; pnpm postlint; exit $exitError\"",
-    "postlint": "bash -c 'if ! grep -q \"//.*\\\"include\\\":\" tsconfig.json; then sed -i \"s/\\\"include\\\":/\\/\\/ \\\"include\\\":/\" tsconfig.json; fi'",
+    "postlint": "node ./scripts/package.json/lint-helper.js postlint",
     "clean": "bash -c 'if [ $# -eq 0 ]; then tsc --build --clean; else tsc --build --clean $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
     "compile": "bash -c 'if [ $# -eq 0 ]; then tsc --build; else tsc --build $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
     "fix": "gts fix",
@@ -26,7 +24,7 @@
   "devDependencies": {
     "@types/node": "20.12.7",
     "gts": "^5.3.1",
-    "typescript": "^5.4.3",
+    "typescript": "5.6.3",
     "typescript-eslint": "^8.7.0"
   }
 }

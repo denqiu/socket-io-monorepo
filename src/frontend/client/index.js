@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { BUILT_IN_SOCKET_EVENTS, ROOM_EVENTS } from "@dqiu/util-event";
+import { EventHelper, BUILT_IN_SOCKET_EVENTS, ROOM_EVENTS } from "@dqiu/util-event";
 import ServerUtil from "@dqiu/util-server";
 
 /**
@@ -27,12 +27,11 @@ class Client {
 	testConnectionToServer() {
 		this.socket.on(BUILT_IN_SOCKET_EVENTS.connect_socket_to_io, () => {
 			// Note: Listening to custom events should be handled outside. Doing that here stacks the same listener every time client disconnects and reconnects or whenever nodemon reloads. In other words, the same message appears multiple times.
-			this.socket.emit("SAMPLE_EVENT", { message: "sample test"});
 			/**
 			 * @type {EventType}
 			 */
 			let roomType;
-			if (process.env.ONE_AT_A_TIME_EVENTS) {
+			if (EventHelper.eventTypes.ONE_AT_A_TIME.enabled) {
 				// this.socket.on(MESSAGING_EVENTS.SUCCESS, (response) => {
 				// 	console.log(response);
 				// });
@@ -57,7 +56,7 @@ class Client {
 				});
 				this.socket.emit(ROOM_EVENTS.LEAVE_ROOM, "route-error", roomType);
 			}
-			if (process.env.PARALLEL_EVENTS) {
+			if (EventHelper.eventTypes.PARALLEL.enabled) {
 				roomType = 'PARALLEL';
 				this.socket.emit(ROOM_EVENTS.ENTER_ROOM, "route", roomType);
 				this.socket.emit("PARALLEL_1", { room: "route", message: "Hi Parallel 1" });
@@ -85,17 +84,15 @@ class Client {
 		 * @param {{ [Props in keyof EventResponseType]: EventResponseType[Props] }} response 
 		 */
 		const responder = (response) => this.responses[response.responseType](response.message);
-		this.socket.on("SAMPLE_EVENT_RESPONSE", responder);
-		if (process.env.ONE_AT_A_TIME_EVENTS) {
+		if (EventHelper.eventTypes.ONE_AT_A_TIME.enabled) {
 			/**
 			 * @type {EventType}
 			 */
 			const eventId = 'ONE_AT_A_TIME';
 			this.socket.on(`${eventId}_RESPONSE`, responder);
 		}
-
-		if (process.env.PARALLEL_EVENTS) {
-			for (const eventId in this.eventIds) {
+		if (EventHelper.eventTypes.PARALLEL.enabled) {
+			for (const eventId of this.eventIds) {
 				this.socket.on(`${eventId}_RESPONSE`, responder);
 			}
 		}
@@ -106,16 +103,15 @@ class Client {
 		 * @param {{ [Props in keyof EventResponseType]: EventResponseType[Props] }} response 
 		 */
 		const responder = (response) => this.responses[response.responseType](response.message);
-		if (process.env.ONE_AT_A_TIME_EVENTS) {
+		if (EventHelper.eventTypes.ONE_AT_A_TIME.enabled) {
 			/**
 			 * @type {EventType}
 			 */
 			const eventId = 'ONE_AT_A_TIME';
 			this.socket.off(`${eventId}_RESPONSE`, responder);
 		}
-
-		if (process.env.PARALLEL_EVENTS) {
-			for (const eventId in this.eventIds) {
+		if (EventHelper.eventTypes.PARALLEL.enabled) {
+			for (const eventId of this.eventIds) {
 				this.socket.off(`${eventId}_RESPONSE`, responder);
 			}
 		}
