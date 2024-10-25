@@ -1,0 +1,7 @@
+const ROUTE_EVENTS = {
+    SEND_ROUTES_FROM_SERVER: 'SEND_ROUTES_FROM_SERVER'
+};
+
+export {
+    ROUTE_EVENTS,
+};

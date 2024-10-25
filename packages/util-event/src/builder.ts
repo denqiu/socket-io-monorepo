@@ -24,83 +24,86 @@ class EventResponder {
 }
 
 // Ref: HTMLElementTagNameMap, K extends keyof HTMLElementTagNameMap in node_modules/typescript/lib/lib.dom.d.ts
-const OneAtATimeEvent = {
-    type: "",
-    label: "",
+
+/**
+ * Enable or disable event type at project level. It's valid to enforce events that only run either ONE_AT_A_TIME or PARALLEL.
+ */
+const eventTypes = {
+    "ONE_AT_A_TIME": { enabled: true },
+    "PARALLEL": { enabled: true }
+};
+
+type EventType = keyof typeof eventTypes;
+
+type EventDisplayType = "SERVER" | "FRAMEWORK";
+
+type FrameworkSideEvent = {
+    id: string;
+    label: string;
+    description: string;
+};
+
+type ServerSideEvent<T extends EventType> = {
+    [Props in keyof FrameworkSideEvent]: FrameworkSideEvent[Props]; } & {
     /**
-     * @param data Passes information from the client to the server.
+     * @param data Information passed from the client to the server.
      * @param responder Passes information from the server to the client.
      */
-    callback: (data: any, responder: EventResponder) => {},
+    callback: (data: any, responder: EventResponder) => void;
+    getType: () => T;
 };
 
-const ParallelEvent = {
-    id: "",
-    ...OneAtATimeEvent
+const EventConfig = {
+    eventTypes,
+    listEventTypes: () => Object.keys(eventTypes) as EventType[]
 };
 
-const EventMap = {
-    "ONE_AT_A_TIME": OneAtATimeEvent,
-    "PARALLEL": ParallelEvent
-};
-
-type EventType = keyof typeof EventMap;
-
-type Event<T extends EventType> = typeof EventMap[T];
-
-const EventHelper = (() => {
-    const listEventTypes = () => Object.keys(EventMap) as EventType[];
-    const eventTypes = {} as { [eventType in EventType]: { enabled: boolean }};
-    for (const eventType of listEventTypes()) {
-        eventTypes[eventType] = { enabled: true };
-    }
-    return {
-        /**
-         * Enable or disable event type at project level. It's valid to enforce events that only run either one-at-a-time or parallel.
-         */
-        eventTypes,
-        listEventTypes
-    };
-})();
+/**
+ * Event Id tracker at project level.
+ */
+let trackEventIds: string[] = [];
 
 class EventBuilder {
-    private events: Event<EventType>[] = [];
-    private eventIds: string[] = [];
+    private events: ServerSideEvent<EventType>[] = [];
 
     /**
-     * Add an event. If event's type is disabled, exit. If event is parallel, add the event's id.
+     * Add an event.
+     * 1. If event's type is disabled, exit.
+     * 2. If event is ONE_AT_A_TIME, event's type is used as id. If id is absent, add id otherwise skip. Duplicate ONE_AT_A_TIME ids are not allowed.
+     * 3. If event is PARALLEL, add the event's id.
      * @param eventType Type of event.
      * @param event An event.
      * @throws Duplicate error if event is parallel and id already exists.
      */
-    add<T extends EventType>(eventType: T, event: { [Props in keyof Event<T>]: Event<T>[Props]; }) {
-        if (!EventHelper.eventTypes[eventType].enabled) {
+    add<T extends EventType>(eventType: T, event: { [Props in keyof ServerSideEvent<T>]: ServerSideEvent<T>[Props]; }) {
+        if (!EventConfig.eventTypes[eventType].enabled) {
             return;
         }
-        if (eventType === 'PARALLEL') {
-            const parallelEvent = event as typeof ParallelEvent;
-            if (this.eventIds.includes(parallelEvent.id)) {
-                throw new Error(`Duplicate event id: ${parallelEvent.id}`);
+        if (eventType === 'ONE_AT_A_TIME') {
+            event.id = eventType;
+            if (!trackEventIds.includes(eventType)) {
+                trackEventIds.push(eventType);
             }
-            this.eventIds.push(parallelEvent.id);
+        } else if (eventType === 'PARALLEL') {
+            if (trackEventIds.includes(event.id)) {
+                throw new Error(`Duplicate event id: ${event.id}`);
+            }
+            trackEventIds.push(event.id);
         }
-        event.type = eventType;
         this.events.push(event);
     }
 
     getEvents() {
         return this.events;
     }
-
-    getEventIds() {
-        return this.eventIds;
-    }
 }
 
 export {
+    type FrameworkSideEvent,
+    type EventDisplayType,
     type EventType,
     type EventResponseType,
     EventResponder,
     EventBuilder,
-    EventHelper
+    EventConfig
 };

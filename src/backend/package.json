@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "nodemon test-server.js",
-    "framework": "nodemon test-framework.js"
+    "test": "nodemon ./servers/test.js",
+    "test:framework": "nodemon ./servers/test-framework.js",
+    "app": "nodemon ./servers/app.js"
   },
   "keywords": [],
   "author": "",
