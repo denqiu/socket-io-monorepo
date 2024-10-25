@@ -1,7 +1,7 @@
 import { HowToExpandProps } from "./build/index.js";
 
 /**
- * @typedef {import("./build/index.js").SampleProps} SampleProps
+ * @typedef {import("./build/index.js").SampleProps} SampleProps;
  */
 
 class Help {

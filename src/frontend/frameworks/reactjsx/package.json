@@ -8,14 +8,15 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "backend:framework": "pnpm --filter @dqiu/backend-server framework",
+    "backend:framework": "pnpm --filter @dqiu/backend-server test:framework",
     "test:dev": "pnpm lint && concurrently \"pnpm backend:framework\" \"pnpm dev\""
   },
   "dependencies": {
+    "@dqiu/util-event": "workspace:*",
+    "@dqiu/util-route": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@dqiu/util-event": "workspace:*",
-    "@dqiu/util-route": "workspace:*"
+    "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

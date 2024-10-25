@@ -3,6 +3,7 @@ import globals from 'globals'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import { turnOffJavascriptRules } from "@dqiu/util-eslint";
 
 export default [
   { ignores: ['build'] },
@@ -25,6 +26,7 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
+	  ...turnOffJavascriptRules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,

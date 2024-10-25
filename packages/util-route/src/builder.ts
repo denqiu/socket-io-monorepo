@@ -1,8 +1,13 @@
-import { EventBuilder, EventHelper } from "@dqiu/util-event";
+import { EventBuilder, EventConfig, FrameworkSideEvent } from "@dqiu/util-event";
+
+type FrameworkSideRoutes = {
+	route: string;
+	events: FrameworkSideEvent[];
+};
 
 type RouteProps = {
-    eventBuilder: EventBuilder,
-    route: string
+	route: string;
+	eventBuilder: EventBuilder;
 };
 
 /**
@@ -39,8 +44,8 @@ class RouteBuilder {
 	 * Setup warning after all routes and associated event builders have been added.
 	 */
 	warnEventTypes() {
-		for (const eventType of EventHelper.listEventTypes()) {
-			if (!EventHelper.eventTypes[eventType].enabled) {
+		for (const eventType of EventConfig.listEventTypes()) {
+			if (!EventConfig.eventTypes[eventType].enabled) {
 				console.warn(`[Warning] ${eventType} events have been created but are not allowed to load. Enable the event type to remove this warning.`);
 			}
 		}
@@ -52,7 +57,8 @@ const testRouteBuilder = new RouteBuilder();
 const routeBuilder = new RouteBuilder();
 
 export {
-    type RouteProps,
+    type FrameworkSideRoutes,
+	type RouteProps,
     testRouteBuilder,
     routeBuilder
 };

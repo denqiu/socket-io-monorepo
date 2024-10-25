@@ -1,0 +1,17 @@
+{
+  "name": "@dqiu/util-eslint",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "./build"
+  ],
+  "scripts": {
+    "lint:helper": "node ./lint-helper.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}

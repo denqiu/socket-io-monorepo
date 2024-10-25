@@ -1,6 +1,6 @@
 <h1>Backend</h1>
 <ul>
-    <li>Contain events and server.</li>
-    <li>Use relative paths to <code>index.js</code> to import the backend.</li>
-    <li>Allowed exports: Events and test events. Server is not allowed.</li>
+    <li>Deno is currently not implemented but will check out later. Might checkout Bun too.</li>
+    <li><a href="https://socket.io/blog/socket-io-deno/">Socket.io Server for Deno</a></li>
+    <li><a href="https://devr.me/socket-io-deno">Demo: Socket.io Server for Deno with Sveltekit</a></li>
 </ul>

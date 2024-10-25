@@ -12,6 +12,7 @@
   "dependencies": {
     "@dqiu/util-event": "workspace:*",
     "@dqiu/util-server": "workspace:*",
+    "@dqiu/util-route": "workspace:*",
     "socket.io-client": "^4.8.0"
   }
 }
