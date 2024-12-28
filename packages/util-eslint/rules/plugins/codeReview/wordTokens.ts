@@ -1,0 +1,2 @@
+// reviews typescript syntax like "as" and "?" (optional prop). Easier to focus in on developing clarity if purpose is unclear.
+// Specify properties "ts" and "js", each with array of tokens/symbols for review.
