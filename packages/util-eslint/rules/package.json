@@ -1,0 +1,36 @@
+{
+  "name": "@dqiu-util-eslint/rules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "./build"
+  ],
+  "scripts": {
+    "clean": "tsc --build --clean",
+    "compile": "tsc",
+    "test": "vitest ./build/plugins.test.js",
+    "demo": "node ./build/demoGenerator.js",
+    "lint": "eslint .",
+    "comments": "node eslint.config.code-review.comments.js",
+    "comments:new": "node eslint.config.create-copy.js code-review.comments"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "@typescript-eslint/rule-tester": "^8.15.0",
+    "@typescript-eslint/utils": "^8.15.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.7"
+  },
+  "dependencies": {
+    "json2md": "^2.0.1",
+    "marked": "^15.0.4",
+    "ulidx": "^2.4.1"
+  }
+}

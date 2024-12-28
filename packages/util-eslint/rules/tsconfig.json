@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "rootDir": ".",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "noImplicitAny": false, // Removes: Parameter implicitly has an 'any' type.
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+  },
+  "include": ["plugins", "demo", "*.ts"],
+  // "exclude": ["eslint.config*.js"] // Ignore plugins import from build folder.
+}
