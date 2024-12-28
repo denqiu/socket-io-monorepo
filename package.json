@@ -6,19 +6,14 @@
     "reinstall": "bash -c 'rm pnpm-lock.yaml; rm -rf node_modules/@dqiu' && pnpm install",
     "help:type": "pnpm --filter @dqiu/util-type help:type",
     "tsconfig:references": "node ./packages/generate-references.js",
+    "lint": "eslint .",
+    "comments": "eslint . --fix --config eslint.config.code-review.comments.js",
+    "clean": "bash -c 'if [ $# -eq 0 ]; then tsc --build --clean; else tsc --build --clean $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
+    "compile": "bash -c 'if [ $# -eq 0 ]; then tsc --build; else tsc --build $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
     "backend:server": "pnpm --filter @dqiu/backend-server test",
     "frontend:client": "pnpm --filter @dqiu/frontend-client test",
     "test:client": "pnpm lint && concurrently \"pnpm backend:server\" \"pnpm frontend:client\"",
-    "backend:app": "pnpm --filter @dqiu/backend-server app",
-    "prelint": "pnpm --filter @dqiu/util-eslint lint:helper prelint",
-    "lint": "bash -c \"pnpm prelint && pnpm gts lint; exitError=$?; pnpm postlint; exit $exitError\"",
-    "postlint": "pnpm --filter @dqiu/util-eslint lint:helper postlint",
-    "clean": "bash -c 'if [ $# -eq 0 ]; then tsc --build --clean; else tsc --build --clean $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
-    "compile": "bash -c 'if [ $# -eq 0 ]; then tsc --build; else tsc --build $(printf \"./packages/%s/tsconfig-package.json \" $@); fi' --",
-    "fix": "gts fix",
-    "prepare": "pnpm.cmd run compile",
-    "pretest": "pnpm.cmd run compile",
-    "posttest": "pnpm.cmd run lint"
+    "backend:app": "pnpm --filter @dqiu/backend-server app"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +23,7 @@
     "@dqiu/util-eslint": "workspace:*"
   },
   "devDependencies": {
-    "@eslint/js": "^9.11.1",
+    "@eslint/js": "^9.13.0",
     "@types/node": "20.12.7",
     "gts": "^5.3.1",
     "typescript": "5.6.3",

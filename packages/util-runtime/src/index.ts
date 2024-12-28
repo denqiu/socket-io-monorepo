@@ -1,4 +1,5 @@
 /**
+ * [code-review/comments, Comment Id: 01JEMYS06MW059QB91NYMJGDX6]
  * Handles undefined variables that can break the app.
  */
 const RuntimeUtil = {

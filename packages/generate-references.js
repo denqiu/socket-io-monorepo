@@ -8,6 +8,7 @@ function toReferencePath(packageTsconfig) {
 }
 
 /**
+ * [code-review/comments, Comment Id: 01JENMF4YG06722DQFV3R068SH]
  * Generate path references for all packages.
  * 1. If package exists, add to paths. Otherwise warn that TsConfig file doesn't exist.
  * 2. Copy paths output into references property in tsconfig.json.
@@ -15,7 +16,7 @@ function toReferencePath(packageTsconfig) {
 function run() {
 	const currentDirectory = import.meta.dirname;
 	const packageNames = fs.readdirSync(currentDirectory).filter(p => fs.statSync(path.join(currentDirectory, p)).isDirectory());
-	let paths = [];
+	const paths = [];
 	let packageTsconfig;
 	for (const pkg of packageNames) {
 		packageTsconfig = path.join(currentDirectory, pkg, "tsconfig-package.json");

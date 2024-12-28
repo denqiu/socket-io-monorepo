@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Prelaunch Rules/Comments",
+            "type": "shell",
+            "command": "bash", 
+            "args": ["-c", "rm -rf build && pnpm clean && pnpm compile"],
+            "options": {
+                "cwd": "${workspaceFolder}/packages/util-eslint/rules"
+            }
+        }
+    ]
+}

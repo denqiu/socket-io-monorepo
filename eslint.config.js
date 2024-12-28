@@ -2,6 +2,10 @@ import tseslint from 'typescript-eslint';
 import jslint from "@eslint/js";
 import { turnOffJavascriptRules, turnOffTypescriptRules } from "@dqiu/util-eslint";
 
+export const sharedConfig = {
+	ignores: ["**/build/**", "src/frontend/frameworks/**", "**/eslint.config*.js"],
+};
+
 /**
  * How to get started:
  * 1. https://eslint.org/docs/latest/use/configure/migration-guide#packagejson-configuration-no-longer-supported
@@ -10,11 +14,15 @@ import { turnOffJavascriptRules, turnOffTypescriptRules } from "@dqiu/util-eslin
  */
 export default tseslint.config({
 	/**
+	 * Linting is applied to these files.
+	 */
+	files: ["tests/**/*.js", "src/backend/**/*.js", "src/frontend/client/**/*.js", "packages/**/*.{js,ts}"],
+	/**
 	 * Fixes the exact same parsing error that was fixed in tsconfig.json's include prop.
 	 */
-	ignores: ["**/build/**", "eslint.config.mjs", "**/frameworks/**"],
+	ignores: sharedConfig.ignores,
 	/**
-	 * See https://typescript-eslint.io/packages/typescript-eslint#flat-config-extends.
+	 * Sets up recommended rules. See https://typescript-eslint.io/packages/typescript-eslint#flat-config-extends.
 	 */
 	extends: [
 		jslint.configs.recommended,
@@ -23,12 +31,7 @@ export default tseslint.config({
 	languageOptions: {
 		parser: tseslint.parser,
 		parserOptions: {
-			/**
-			 * Much faster than projectService and tsconfigRootDir
-			 */
-			// project: true,
-			// projectService: true,
-			// tsconfigRootDir: import.meta.dirname
+			projectService: true,
 		},
 	},
 	plugins: {
@@ -45,6 +48,9 @@ export default tseslint.config({
 		'@typescript-eslint/no-for-in-array': 'error',
 		/**
 		 * TODO: Easy to custom implement. Packages are implemented at project level, so there are stuff shared between backend and frontend. But there are certain things that should be used only in backend and not in frontend, and vice versa, i.e., builders should be imported in backend but throw error if imported in frontend.
+		 */
+		/**
+		 * Block non-recommendations from codebase setup.
 		 */
 	}
 });

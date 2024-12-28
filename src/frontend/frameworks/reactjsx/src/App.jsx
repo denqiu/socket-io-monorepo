@@ -24,6 +24,8 @@ client.socket.on(BUILT_IN_SOCKET_EVENTS.connect_socket_to_io, () => {
 });
 // move client to main.jsx
 
+// TODO: move route events to route apis in server.
+
 /**
  * References:
  * 1. https://reactrouter.com/en/main/route/route#layout-routes
@@ -58,7 +60,7 @@ function App() {
    * @returns 
    */
   const setupRoutes = (routes) => {
-
+    
   };
 
   // load events/routes here
@@ -78,8 +80,8 @@ function App() {
   //   };
   // }, []);
   useEffect(() => {
-    // note that console message appears twice without turning off route setup.
-    // turning off route setup makes sure routes are mounted once and not twice.
+    // note that console message appears twice without turning off route response.
+    // turning off route response makes sure routes are mounted once and not twice.
     client.socket.on(BUILT_IN_SOCKET_EVENTS.disconnect, disconnect);
     client.socket.on(BUILT_IN_SOCKET_EVENTS.connect_socket_to_io, connectSocketToIo);
     client.listenToRouteResponse(setupRoutes);
@@ -91,12 +93,12 @@ function App() {
   }, []);
   return (
     <Routes>
-        {routes.map((r, index) => {
-          return (
-            <Route key={index} path={r.route} element={<h1>{r.route}</h1>} />
-          );
-        })}
-      </Routes>
+      {routes.map((r, index) => {
+        return (
+          <Route key={index} path={r.route} element={<h1>{r.route}</h1>} />
+        );
+      })}
+    </Routes>
   );
 
   // return (
