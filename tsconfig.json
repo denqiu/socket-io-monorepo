@@ -1,7 +1,7 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     // base configuration at root level
+    "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
@@ -19,9 +19,10 @@
     "lib": ["dom", "es2022"], // Removes: Cannot find name 'window'.
     "noImplicitAny": false, // Removes: Parameter implicitly has an 'any' type.
     "strictNullChecks": false, // Removes: Cannot invoke an object which is possibly 'undefined'.
+    "useUnknownInCatchVariables": false, // Disable unknown property errors inside catch section of try-catch blocks.
     // package configuration at root level
-    "declaration": true,
     "composite": true,
+    "declaration": true,
     "sourceMap": true,
     "declarationMap": true,
     "paths": {}
@@ -32,8 +33,19 @@
   // 4. Found additional parameters to disable eslint checks but couldn't remove 'Cannot write file because it would overwrite input file' errors in tsconfig.json.
   // 5. Workaround to fix 4 is to enable "include" property before linting and disable "include" after linting. Reference: https://bencane.com/understanding-exit-codes-in-bash-6942a8b96ce5. Note that single quotes were changed to double quotes to resolve passing 'lint;' instead of 'lint' to "pnpm gts".
   // 6. Workaround migrated to lint helper in util-eslint.
+  // 7. Originally include has tests, src, packages. Note that leaving empty array resolved issue at step 4. Commenting out include property results in the same problem as including tests, src, and packages. Why does this work? Actually it looks like files property has a hand in this. Why?
+  // 8. Tabnine AI: Workaround to fix 7 is to add "files": [] to tsconfig.json. Note that this is not recommended as it causes errors for missing files.
+  // 9. Elaborate 8 on errors for missing files. Update: Haven't spent effort on this (see 16).
+  // 10. Move tests, src, and packages to eslint config file. Actually no clue what I'm doing. Very confused.
+  // 11. noEmit did the trick. Set it to true here to disable compiling code to .d.ts and .js (which does meet the condition of overwriting source code) and set it to false in tsconfig-package.jsons to allow packages to compile normally. This allows type-checks and has no effect on linting process. Ref: https://stackoverflow.com/a/67499315/27162106
+  // 12. References require eslint config to use projectService instead of project. Having a hard time with include, exclude, parsing errors, etc.
+  // 13. packages/util-eslint/rules use tsconfig without references and thus eslint config with project. Setup feels simpler and less complicated.
+  // 14. Extend base tsconfig in package tsconfig. Base tsconfig is root level.
+  // 15. Code GPT from ChatGPT-4o mini tells me references are still needed. So, forget about refactoring tsconfig to use extends property for now.
+  // 16. Why? References support incremental builds, which means building packages in a specific order. This is needed for packages that depend on other packages.
   
-  // "include": ["tests", "src", "packages"],
+  "include": ["tests", "src", "packages"], // refer to files in eslint.config.js
+  "exclude": ["src/frontend/frameworks/**", "packages/util-eslint/rules/**"],
   "files": [],
   "references": [
     {

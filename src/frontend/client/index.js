@@ -10,6 +10,7 @@ import ServerUtil from "@dqiu/util-server";
  */
 
 const socket = io(ServerUtil.NODE_ENV === 'development' ? `http://localhost:${ServerUtil.backendPort}` : window.location.origin);
+// setup authentication https://dev.to/hayatscodes/socketio-authentication-system-with-jwt-3ae8
 
 /**
  * Rules:

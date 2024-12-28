@@ -1,4 +1,5 @@
 <h1>Codebase Setup</h1>
+
 <ol>
     <li>Codebase in general should be implemented in Javascript, i.e., backend, client frontend, frameworks.</li>
     <li>Any custom code that we want to import, implement in Typescript, i.e., packages, framework components.</li>

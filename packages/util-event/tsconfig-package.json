@@ -3,9 +3,9 @@
     // package configuration at package level
     "compilerOptions": {
         "outDir": "./build",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "noEmit": false
     },
-    "include": [
-     "src/*.ts",
-    ]
+    "include": ["src/*.ts"],
+    "exclude": ["./build"]
 }

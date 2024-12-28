@@ -4,17 +4,17 @@ import { DateTime } from "luxon";
 
 /**
  * @typedef {import("@dqiu/util-event").EventDisplayType} EventDisplayType
- * @typedef {import("luxon").DurationUnits} DurationUnits
+ * @typedef {import("luxon").DurationUnit} DurationUnit
  */
 
 /**
- * Countdown timer for one-at-a-time event type.
- * @param {number} duration 
- * @param {DurationUnits} durationUnits
+ * Countdown timer for ONE_AT_A_TIME event.
+ * @param {number} duration
+ * @param {DurationUnit} durationUnit
  * @param {EventResponder} eventResponder 
  */
-function createCountdownTimer(duration, durationUnits, eventResponder) {
-	const end = DateTime.now().plus({ [durationUnits]: duration });
+function createCountdownTimer(duration, durationUnit, eventResponder) {
+	const end = DateTime.now().plus({ [durationUnit]: duration });
 	const showCountdown = () => {
 		const countdown = end.diffNow();
 		if (countdown.as('milliseconds') <= 0) {
@@ -22,13 +22,14 @@ function createCountdownTimer(duration, durationUnits, eventResponder) {
 			clearInterval(timer);
 			return;
 		}
-		eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `Countdown: ${countdown.as(durationUnits)} ${durationUnits}` });
+		eventResponder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `Countdown: ${countdown.as(durationUnit)} ${durationUnit}` });
 	};
 	const timer = setInterval(showCountdown, 1000);
 	showCountdown();
 }
 
 /**
+ * UI will display event's label and description. For testing purposes, event's id appears in UI. Otherwise, id is not allowed to appear.
  * @param {EventDisplayType} displayType If 'SERVER' return test routes with only parallel events. If 'FRAMEWORK' return test routes with both one at a time and parallel events.
  */
 function TestEvents(displayType) {
@@ -48,19 +49,19 @@ function TestEvents(displayType) {
 		});
 		routeEvents.add('ONE_AT_A_TIME', {
 			label: 'Wait 15 seconds',
-			description: "[Framework Test] A countdown timer that demonstrates how one-at-a-time events behave. Expected behavior is that one-at-a-time events across all routes would be disabled until the countdown timer completes.",
+			description: "[Framework Test] A countdown timer that demonstrates how ONE_AT_A_TIME events behave. Expected behavior is that ONE_AT_A_TIME events across all routes would be disabled until the countdown timer completes.",
 			callback: (data, responder) => createCountdownTimer(15, 'seconds', responder)
 		});
 		routeEvents.add('ONE_AT_A_TIME', {
 			label: "Event 1",
-			description: "[Framework Test] One at a time event moved from client to server that simply logs a message from data. If countdown timer event is running, we must wait for it to complete before this simple logging event can run.",
+			description: "[Framework Test] ONE_AT_A_TIME version of parallel event 'PARALLEL_1'. If countdown timer event is running, this event must wait for countdown timer to complete before it can run. ONE_AT_A_TIME event moved from client to server that simply logs a message from data.",
 			callback: (data, responder) => console.log(`Event: ${data.message}`)
 		});
 	}
 	routeEvents.add('PARALLEL', {
 		id: "PARALLEL_1",
 		label: "Parallel Event 1",
-		description: "[Server Test] Logs a message in parallel. Not affected by countdown timer event.",
+		description: "[Server Test] Not affected by countdown timer event. Parallel event that logs a message from data with event's id.",
 		callback: (data, responder) => console.log(`${responder.getEventId()} - Event: ${data.message}`)
 	});
 
@@ -76,12 +77,12 @@ function TestEvents(displayType) {
 		});
 		route2Events.add('ONE_AT_A_TIME', {
 			label: 'Wait 10 seconds',
-			description: "[Framework Test] A countdown timer that demonstrates how one-at-a-time events behave. Expected behavior is that one-at-a-time events across all routes would be disabled until the countdown timer completes.",
+			description: "[Framework Test] A countdown timer that demonstrates how ONE_AT_A_TIME events behave. Expected behavior is that ONE_AT_A_TIME events across all routes would be disabled until the countdown timer completes.",
 			callback: (data, responder) => createCountdownTimer(10, 'seconds', responder)
 		});
 		route2Events.add('ONE_AT_A_TIME', {
 			label: "Event route 2",
-			description: "[Framework Test] One at a time event moved from client to server that test IO sending message to client and logging a message from data. If countdown timer event is running, we must wait for it to complete before this event can run.",
+			description: "[Framework Test] ONE_AT_A_TIME version of parallel event 'PARALLEL_2'. If countdown timer event is running, this event must wait for countdown timer to complete before it can run. ONE_AT_A_TIME event moved from client to server that logs a message from data and uses server IO to send a message to client.",
 			callback: (data, responder) => {
 				console.log(`Event: ${data.message}`);
 				responder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `Event emitting IO: io ${data.message}` });
@@ -91,6 +92,7 @@ function TestEvents(displayType) {
 	route2Events.add('PARALLEL', {
 		id: "PARALLEL_2",
 		label: "Parallel Event route 2",
+		description: "[Server Test] Not affected by countdown timer event. Parallel event that logs a message from data and uses server IO to send a message to client with event's id.",
 		callback: (data, responder) => {
 			console.log(`${responder.getEventId()} - Event: ${data.message}`);
 			responder.emitToClient({ responseType: MESSAGING_EVENTS.SUCCESS, message: `${responder.getEventId()} - Emitting IO: io ${data.message}` });
@@ -109,11 +111,12 @@ function TestEvents(displayType) {
 		});
 		routeErrorEvents.add('ONE_AT_A_TIME', {
 			label: 'Wait 30 seconds',
-			description: "[Framework Test] A countdown timer that demonstrates how one-at-a-time events behave. Expected behavior is that one-at-a-time events across all routes would be disabled until the countdown timer completes.",
+			description: "[Framework Test] A countdown timer that demonstrates how ONE_AT_A_TIME events behave. Expected behavior is that ONE_AT_A_TIME events across all routes would be disabled until the countdown timer completes.",
 			callback: (data, responder) => createCountdownTimer(30, 'seconds', responder)
 		});
 		routeErrorEvents.add('ONE_AT_A_TIME', {
 			label: "Error Event",
+			description: "[Framework Test] ONE_AT_A_TIME version of parallel event 'PARALLEL_ERROR'. If countdown timer event is running, this event must wait for countdown timer to complete before it can run. ONE_AT_A_TIME event moved from client to server that simply throws and catches an error to test error handling. For testing purposes the server handles errors. In actual applications, each event will handle its own errors.",
 			callback: (data, responder) => {
 				throw new Error("Threw error");
 			}
@@ -122,6 +125,7 @@ function TestEvents(displayType) {
 	routeErrorEvents.add('PARALLEL', {
 		id: "PARALLEL_ERROR",
 		label: "Parallel Event Error",
+		description: "[Server Test] Not affected by countdown timer event. Parallel event that simply throws and catches an error to test error handling. For testing purposes the server handles errors. In actual applications, each event will handle its own errors.",
 		callback: (data, responder) => {
 			throw new Error(`Threw parallel error`);
 		}

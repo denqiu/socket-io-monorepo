@@ -1,12 +1,26 @@
 <h1>Packages</h1>
 
-<h2>Labeling Package Importance</h2>
-UPDATE: Make changes later. Logic will be moved to neo4j. Also check out code maps.
+<h2>Package Structure</h2>
+<pre>
+packages
+  |util-package
+    |build //compiled from src
+    |src //Typescript only. Put anything that we want to reuse inside src folder so that we can import them elsewhere in any codebase.
+      |index.ts
+    //Anything not within src folder will be used specifically for this codebase. Typescript files are not allowed.
+    |more-samples
+      |more.js
+    |sample.js
+    |package.json
+    |tsconfig-package.json
+    |tsconfig-package.tsbuildinfo
+</pre>
+
+<h2>Reference Generator</h2>
 <ol>
-    <li>Package names are kept as is. No need to prefix level of importance, i.e., <code>util-event</code>.</li>
-    <li>Folder names are prefixed with level of importance, i.e., <code>important-1_util-event</code>.</li>
-    <li>Added to provide visual clarity on which package(s) are important and which package(s) are less important or not used at all, i.e., <code>important, support, not-used</code>. Numbers matter, i.e., <code>important-1</code> should represent the most important package, <code>important-2</code> should be the second important package, <code>support-1</code> is the first helper package, etc.</li>
-    <li>Run <code>pnpm tsconfig:references</code> to generate path references. Then copy and paste into tsconfig's references property. Easier to do than trying to handle comments in json file.</li>
+    <li>Run <code>pnpm tsconfig:references</code> to generate path references.</li>
+    <li>Then copy and paste into tsconfig's references property.</li>
+    <li>Easier to do than trying to handle comments in tsconfig file, which is a json file.</li>
 </ol>
 
 <h2>After <code>eslint.config.mjs</code> was Created</h2>

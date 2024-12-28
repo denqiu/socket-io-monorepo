@@ -1,5 +1,5 @@
-// Built-in events are in lower case only.
-// Custom events can be any character, any combination, and in any case (upper or lower case).
+//[code-review/comments, Comment Id: 01JEMYRYKVJRD7PWG1Y58WYZYC] Built-in events are in lower case only.
+//[code-review/comments, Comment Id: 01JEMYRYKYSSYSAJ330DK03J41] Custom events can be any character, any combination, and in any case (upper or lower case).
 const BUILT_IN_IO_EVENTS = {
     connect_io_to_socket: 'connection'
 };

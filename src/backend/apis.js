@@ -1,0 +1,1 @@
+// simple api to retrieve boolean expressing whether event's id should be displayed or not depending on whether server mode is test or app

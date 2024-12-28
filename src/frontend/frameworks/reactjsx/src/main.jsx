@@ -6,10 +6,10 @@ import './index.css';
 import { ROUTE_EVENTS } from "@dqiu/util-route";
 import Client from '../../../client/index.js';
 
-const client = new Client();
-client.socket.on(BUILT_IN_SOCKET_EVENTS.connect_socket_to_io, () => {
-  client.socket.emit(ROUTE_EVENTS.SEND_ROUTES_FROM_SERVER);
-});
+// const client = new Client();
+// client.socket.on(BUILT_IN_SOCKET_EVENTS.connect_socket_to_io, () => {
+//   client.socket.emit(ROUTE_EVENTS.SEND_ROUTES_FROM_SERVER);
+// });
 
 /**
  * Setup router that create routes sent from the server.

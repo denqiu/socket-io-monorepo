@@ -33,7 +33,7 @@ if (EventConfig.eventTypes.ONE_AT_A_TIME.enabled) {
 	listenToEventResponse(eventId);
 }
 if (EventConfig.eventTypes.PARALLEL.enabled) {
-	const parallelRoutes = TestEvents('server').getRoutes();
+	const parallelRoutes = TestEvents('SERVER').getRoutes();
 	const events = parallelRoutes.flatMap(r => r.eventBuilder.getEvents());
 	for (const event of events) {
 		listenToEventResponse(event.id);

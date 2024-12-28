@@ -11,6 +11,7 @@ type RouteProps = {
 };
 
 /**
+ * [code-review/comments, Comment Id: 01JEMYRZNTXE1CR3KWXENN0QXA]
  * Route tracker at project level.
  */
 let trackRoutes: string[];
@@ -24,6 +25,7 @@ class RouteBuilder {
 	}
 
 	/**
+  * [code-review/comments, Comment Id: 01JEMYRZNTH4E6ZVA2YCMNZGGS]
 	 * 1. Add route and associated event builder if route doesn't exist.
 	 * 2. Skip route if it already exists.
 	 */
@@ -41,6 +43,7 @@ class RouteBuilder {
 	}
 
 	/**
+  * [code-review/comments, Comment Id: 01JEMYRZNV1RN79ENBZ8F2JDKC]
 	 * Setup warning after all routes and associated event builders have been added.
 	 */
 	warnEventTypes() {
@@ -52,7 +55,7 @@ class RouteBuilder {
 	}
 }
 
-// Ensures the same route builder is used when building routes across multiple files.
+//[code-review/comments, Comment Id: 01JEMYRZNVGERFVTJS3QG71G1T] Ensures the same route builder is used when building routes across multiple files.
 const testRouteBuilder = new RouteBuilder();
 const routeBuilder = new RouteBuilder();
 
